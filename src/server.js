@@ -12,7 +12,13 @@ const options = { useNewUrlParser: true, useUnifiedTopology: true };
 mongoose.connect(process.env.DB_CONNECTION, options).catch(error => console.log(error))
 
 //SETUP ROUTES
-app.use(require('./routes/routes'));
+const appRoutes = require('./routes/routes');
+const usersRoutes = require('./routes/users');
+app.use('/', appRoutes);
+app.use('/users', usersRoutes);
+
+
+
 
 // LAUNCH SERVER
 app.listen(process.env.PORT, () => {
