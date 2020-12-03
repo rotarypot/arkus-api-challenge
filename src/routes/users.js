@@ -3,6 +3,7 @@ const router = Router();
 const User = require('../models/User')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const verify = require('./verifyToken');
 
 
 
@@ -49,6 +50,11 @@ router.post('/login', async (req, res) => {
     res.header('auth-token', token).send("user is logged in, token delivered");
 
 })
+
+router.post('/update', verify, (req, res) => {
+    res.send("auth is correct, you can update stuff")
+})
+
 
 // EXPORT SO WE USE THEM FROM SOMEWHERE ELSE.
 module.exports = router;
