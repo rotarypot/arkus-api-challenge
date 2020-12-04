@@ -1,9 +1,11 @@
 //SETUP SERVER
 const express = require("express");
+const cors = require('cors');
 const app = express();
 app.set('port', process.env.PORT);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 require('dotenv/config');
 
 //CONNECT TO db
