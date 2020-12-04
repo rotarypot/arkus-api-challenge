@@ -16,10 +16,13 @@ mongoose.connect(process.env.DB_CONNECTION, options).catch(error => console.log(
 //SETUP ROUTES
 const appRoutes = require('./routes/routes');
 const usersRoutes = require('./routes/users');
-
+const coursesRoutes = require('./routes/courses');
+const trainingRoutes = require('./routes/trainingTypes');
 
 app.use('/', appRoutes);
 app.use('/users', usersRoutes);
+app.use('/courses', coursesRoutes);
+app.use('/trainingtypes', trainingRoutes);
 
 
 // LAUNCH SERVER
