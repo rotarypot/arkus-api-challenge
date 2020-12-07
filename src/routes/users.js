@@ -42,15 +42,18 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res) => {
 
     const user = await User.findOne({ email: req.body.email })
-    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    if (!user) return res.status(400).send("User does not exist");
 
-    if (!validPassword) return res.status(400).send('Password does not match')
+    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    if (!validPassword) return res.status(400).send('Password does not match');
+
     // JWT token 
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
     res.header('auth-token', token).send("user is logged in, token delivered");
 
 })
 
+// WILL UPDATE USERS TRANING TIMES
 router.post('/update', verify, (req, res) => {
     res.send("auth is correct, you can update stuff")
 })
