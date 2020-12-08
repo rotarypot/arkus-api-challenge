@@ -19,6 +19,18 @@ router.get('/', async (req, res) => {
     }
 });
 
+// GET ONE USER
+router.get('/:id', async (req, res) => {
+
+    try {
+        const user = await User.findById(req.params.id);
+        res.json(user);
+    } catch (err) {
+        res.json({ message: err })
+
+    }
+})
+
 
 // CREATES A USER
 router.post('/', async (req, res) => {
