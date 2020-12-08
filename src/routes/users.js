@@ -1,10 +1,10 @@
 const { Router } = require("express");
 const router = Router();
-const User = require('../models/User')
+const User = require('../models/User');
+const TrainingTimes = require('../models/TrainingTimes');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const verify = require('./verifyToken');
-
 
 
 // Routes
@@ -66,8 +66,26 @@ router.post('/login', async (req, res) => {
 })
 
 // WILL UPDATE USERS TRANING TIMES
-router.post('/update', verify, (req, res) => {
-    res.send("auth is correct, you can update stuff")
+router.post('/update', async (req, res) => {
+
+    const trainingtimes = new TrainingTimes({
+        user_id: req.body.user_id,
+        course_id: req.body.course_id,
+        trainingtype_id: req.body.trainingtype_id,
+        timespent: req.body.timespent
+
+    })
+
+    try {
+        const savedTimes = await trainingtimes.save();
+        res.json({ times: savedTimes._id })
+    } catch (err) {
+        res.status(400).json({ message: err })
+    }
+
+
+
+
 })
 
 
