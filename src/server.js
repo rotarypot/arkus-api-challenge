@@ -18,11 +18,14 @@ const appRoutes = require('./routes/routes');
 const usersRoutes = require('./routes/users');
 const coursesRoutes = require('./routes/courses');
 const trainingRoutes = require('./routes/trainingTypes');
+const publicDataRoutes = require('./routes/publicData');
+
 
 app.use('/', appRoutes);
 app.use('/users', usersRoutes);
 app.use('/courses', coursesRoutes);
 app.use('/trainingtypes', trainingRoutes);
+app.use('/publicdata', publicDataRoutes);
 
 
 // LAUNCH SERVER
