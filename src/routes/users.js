@@ -18,23 +18,6 @@ router.get('/', async (req, res) => {
         res.json({ message: err })
     }
 
-    // this works
-    // try {
-    //     await TrainingTimes.find({
-    //         user_id: {
-    //             $in: [
-    //                 '5fc94a46119442344020667b',
-    //                 '5fc958407a806e12587d1744',
-    //                 '5fcaab2af0d7780098f0f4a6'
-    //             ]
-    //         }
-    //     }, function (err, docs) {
-    //         res.json(docs)
-    //     });
-    // }
-    // catch (err) {
-    //     res.json({ message: err })
-    // }
 });
 
 // GET ONE USER
@@ -79,7 +62,7 @@ router.post('/login', async (req, res) => {
 
     // JWT token 
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-    res.header('auth-token', token).send("user is logged in, token delivered");
+    res.header('auth-token', token).json({ message: 'logged in, token delivered' });
 
 })
 
