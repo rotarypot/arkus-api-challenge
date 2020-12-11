@@ -55,10 +55,10 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res) => {
 
     const user = await User.findOne({ email: req.body.email })
-    if (!user) return res.status(400).send("User does not exist");
+    if (!user) return res.status(401).send("User does not exist");
 
     const validPassword = await bcrypt.compare(req.body.password, user.password)
-    if (!validPassword) return res.status(400).send('Password does not match');
+    if (!validPassword) return res.status(401).send('Password does not match');
 
     // JWT token 
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
