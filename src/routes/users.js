@@ -9,15 +9,25 @@ const verify = require('./verifyToken');
 
 // Routes
 // GETS ALL USERS
+/**
+ * @swagger
+ *  /users:
+ *    get:
+ *      description: Gets all users data
+ *      responses:
+ *        200:
+ *          description: Data was retrieved successfully
+ *        500:
+ *          description: Backend error   
+ */
 router.get('/', async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-
-    } catch (err) {
-        res.json({ message: err })
-    }
-
+    const users = await User.find(err => {
+        if (err) {
+            res.status(500).send('Backend error');
+            return;
+        }
+    });
+    res.status(200).json(users)
 });
 
 // GET ONE USER

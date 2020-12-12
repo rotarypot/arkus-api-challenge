@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const TrainingTypesSchema = mongoose.Schema({
 
-    trainingTypeName: String
+    trainingTypeName: { type: String, required: true }
 
 })
 

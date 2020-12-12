@@ -1,17 +1,49 @@
-const { Router } = require("express");
+const { Router, response } = require("express");
 const router = Router();
 const Course = require('../models/Course');
 
 // Routes
+/**
+ * @swagger
+ *  /courses:
+ *    get:
+ *      description: Gets all courses data
+ *      responses:
+ *        200:
+ *          description: Data was retrieved successfully
+ */
 router.get('/', async (req, res) => {
-    try {
-        const courses = await Course.find();
-        res.json(courses);
+    const courses = await Course.find();
+    res.json(courses)
+})
 
-    } catch (err) {
-        res.json({ message: err })
-    }
-});
+
+// Routes
+
+/**
+ * @swagger
+ *   /courses:
+ *     post:
+ *       description: Creates a new training course
+ *       parameters:
+ *       - in: body
+ *         name: body
+ *         description: Requires an object
+ *         schema:
+ *           type: object
+ *           properties:
+ *             coursename:
+ *               type: string
+ *             courselink:
+ *               type: string
+ *             coursedescription:
+ *               type: string
+ *       responses:
+ *         201:
+ *           description: Course was created successfully
+ *         400: 
+ *           description: Bad request, missing required data
+ */
 
 router.post('/', async (req, res) => {
     const course = new Course({
@@ -19,13 +51,15 @@ router.post('/', async (req, res) => {
         courseLink: req.body.courselink,
         courseDescription: req.body.coursedescription
     })
-    try {
-        const savedCourse = await course.save();
-        res.json({ course: course._id });
+    const savedCourse = await course.save(err => {
+        if (err) { res.status(400).send('Bad request') }
+        else {
+            res.status(201).send({ course: course._id });
 
-    } catch (err) {
-        res.json({ message: err })
-    }
+        }
+    })
+
+
 })
 
 // EXPORT SO WE USE THEM FROM SOMEWHERE ELSE.
