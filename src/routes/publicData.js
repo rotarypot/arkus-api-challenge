@@ -11,6 +11,8 @@ const router = Router();
  *      responses:
  *        200:
  *          description: Data was retrieved successfully
+ *        500:
+ *          description: Backend Error
  */
 router.get('/', async (req, res) => {
 
