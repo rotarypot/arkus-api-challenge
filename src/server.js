@@ -9,6 +9,8 @@ app.use(cors({ exposedHeaders: 'auth-token' }));
 require('dotenv/config');
 const swaggerDocs = require('swagger-jsdoc');
 const swaggerExpress = require('swagger-ui-express');
+const winston = require('winston');
+
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -16,7 +18,8 @@ const swaggerOptions = {
             title: 'Arkus Challenge API',
             description: 'Documentation for the Arkus Challenge API',
             contact: {
-                name: 'Ulises Legarreta - legarul@arkusnexus.com'
+                name: 'Ulises Legarreta',
+                email: 'legarul@arkusnexus.com'
             }
         }
     },
@@ -38,6 +41,7 @@ const usersRoutes = require('./routes/users');
 const coursesRoutes = require('./routes/courses');
 const trainingRoutes = require('./routes/trainingTypes');
 const publicDataRoutes = require('./routes/publicData');
+const { format } = require("winston");
 
 app.use('/', appRoutes);
 app.use('/users', usersRoutes);
@@ -45,7 +49,20 @@ app.use('/courses', coursesRoutes);
 app.use('/trainingtypes', trainingRoutes);
 app.use('/publicdata', publicDataRoutes);
 
+// SETUP LOGGING
+const logger = winston.createLogger({
+    exitOnError: false,
+    level: 'info',
+    format: format.combine(format.simple()),
+    transports: [
+        new winston.transports.File({
+            filename: './logs/api-log.log',
+            maxsize: 2000000
+        })
+    ]
+});
+
 // LAUNCH SERVER
 app.listen(process.env.PORT, () => {
-    console.log(`Server alive on port ${process.env.PORT}`);
+    logger.info('Server alive..');
 })
