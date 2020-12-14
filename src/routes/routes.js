@@ -1,9 +1,9 @@
 const { Router } = require("express");
 const router = Router();
-
+const logger = require('../logs/logger');
 // Routes
 router.get('/', (req, res) => {
-    res.send("We are home..")
+    logger.info('API responding')
 });
 
 // EXPORT SO WE USE THEM FROM SOMEWHERE ELSE.

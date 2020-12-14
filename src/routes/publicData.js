@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const User = require("../models/User");
 const router = Router();
+const logger = require('../logs/logger')
 
 // Routes
 /**
@@ -23,6 +24,7 @@ router.get('/', async (req, res) => {
         .populate({ path: 'TrainingTimes', populate: { path: 'course', select: 'courseName' } })
         .populate({ path: 'TrainingTimes', populate: { path: 'training_type', select: 'trainingTypeName' } })
     res.status(200).json(users);
+    logger.info('delivered public data')
 })
 module.exports = router;
 

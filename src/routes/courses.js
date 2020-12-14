@@ -1,6 +1,7 @@
 const { Router, response } = require("express");
 const router = Router();
 const Course = require('../models/Course');
+const logger = require('../logs/logger')
 
 // Routes
 /**
@@ -15,6 +16,7 @@ const Course = require('../models/Course');
 router.get('/', async (req, res) => {
     const courses = await Course.find();
     res.json(courses)
+    logger.info('Responded with all courses data')
 })
 
 
@@ -55,7 +57,7 @@ router.post('/', async (req, res) => {
         if (err) { res.status(400).send('Bad request') }
         else {
             res.status(201).send({ course: course._id });
-
+            logger.info('New course was created')
         }
     })
 

@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const TrainingTypes = require('../models/TrainingTypes');
+const logger = require('../logs/logger');
 
 // Routes
 /**
@@ -16,9 +17,12 @@ router.get('/', async (req, res) => {
     try {
         const trainingtypes = await TrainingTypes.find();
         res.json(trainingtypes);
+        logger.info('Responded with all training types data');
 
     } catch (err) {
         res.json({ message: err })
+        logger.error('Error while getting all training types data')
+
     }
 });
 
@@ -50,11 +54,13 @@ router.post('/', async (req, res) => {
 
     const savedTrainingtype = await trainingtype.save(err => {
         if (err) {
-            res.status(400).send('Bad request')
-        } else {
-            res.status(201).json({ trainingtype: trainingtype._id })
-        }
+            res.status(400).send('Bad request');
+            logger.error('Bad request trying to create a new Training Type')
 
+        } else {
+            res.status(201).json({ trainingtype: trainingtype._id });
+            logger.info('New training type was created')
+        }
     });
 })
 

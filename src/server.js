@@ -9,8 +9,7 @@ app.use(cors({ exposedHeaders: 'auth-token' }));
 require('dotenv/config');
 const swaggerDocs = require('swagger-jsdoc');
 const swaggerExpress = require('swagger-ui-express');
-const winston = require('winston');
-
+const logger = require('./logs/logger')
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -26,7 +25,6 @@ const swaggerOptions = {
     apis: ['./src/routes/*.js']
 }
 
-
 const swaggerDocumentation = swaggerDocs(swaggerOptions);
 app.use('/api-docs', swaggerExpress.serve, swaggerExpress.setup(swaggerDocumentation));
 
@@ -41,7 +39,6 @@ const usersRoutes = require('./routes/users');
 const coursesRoutes = require('./routes/courses');
 const trainingRoutes = require('./routes/trainingTypes');
 const publicDataRoutes = require('./routes/publicData');
-const { format } = require("winston");
 
 app.use('/', appRoutes);
 app.use('/users', usersRoutes);
@@ -49,20 +46,5 @@ app.use('/courses', coursesRoutes);
 app.use('/trainingtypes', trainingRoutes);
 app.use('/publicdata', publicDataRoutes);
 
-// SETUP LOGGING
-const logger = winston.createLogger({
-    exitOnError: false,
-    level: 'info',
-    format: format.combine(format.simple()),
-    transports: [
-        new winston.transports.File({
-            filename: './logs/api-log.log',
-            maxsize: 2000000
-        })
-    ]
-});
-
 // LAUNCH SERVER
-app.listen(process.env.PORT, () => {
-    logger.info('Server alive..');
-})
+app.listen(process.env.PORT, () => { logger.info('Server up..') })

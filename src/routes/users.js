@@ -5,7 +5,7 @@ const TrainingTimes = require('../models/TrainingTimes');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const verify = require('./verifyToken');
-
+const logger = require('../logs/logger');
 
 // Routes
 // GETS ALL USERS
@@ -24,10 +24,13 @@ router.get('/', async (req, res) => {
     const users = await User.find(err => {
         if (err) {
             res.status(500).send('Backend error');
+            logger.error('Backend error')
             return;
         }
     });
-    res.status(200).json(users)
+    res.status(200).json(users);
+    logger.info('Responded with all users data')
+
 });
 
 // GET ONE USER
@@ -53,7 +56,8 @@ router.get('/:userID', async (req, res) => {
 
     try {
         const user = await User.findById(req.params.userID);
-        res.status(200).json(user)
+        res.status(200).json(user);
+        logger.info('Responded with user id : ' + req.params.userID + ' data')
     }
     catch (e) {
         if (e instanceof Error) {
@@ -108,10 +112,14 @@ router.post('/', async (req, res) => {
     })
     const savedUser = await user.save(err => {
         if (!err) {
-            res.status(201).json({ userID: user._id })
+            res.status(201).json({ userID: user._id });
+            logger.info('User was created successfully')
+
         }
         else {
-            res.status(400).send('Bad request, missing required data')
+            res.status(400).send('Bad request, missing required data');
+            logger.error('Bad request, missing required data')
+
         }
     });
 
@@ -148,24 +156,35 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res) => {
 
     if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+        logger.error('Bad request, body cannot be empty')
         return res.status(400).send('Bad request, request body cannot be empty')
+
     }
     if (!req.body.email) {
+        logger.error('Bad request, email is missing');
         return res.status(400).send('Bad request, email parameter is missing')
     }
     if (!req.body.password) {
+        logger.error('Bad request, password is missing')
         return res.status(400).send('Bad request, password parameter is missing')
     }
 
     const user = await User.findOne({ email: req.body.email })
-    if (!user) return res.status(401).send("User does not exist");
+    if (!user) {
+        return res.status(401).send("User does not exist");
+        logger.error('User does no exist')
+    }
 
     const validPassword = await bcrypt.compare(req.body.password, user.password)
-    if (!validPassword) return res.status(401).send('Password does not match');
+    if (!validPassword) {
+        return res.status(401).send('Password does not match');
+        logger.error('Password does not match')
+    }
 
     // JWT token 
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
     res.header('auth-token', token).json({ message: 'logged in, token delivered' });
+    logger.info('User ' + user._id + ' has logged in')
 
 })
 
