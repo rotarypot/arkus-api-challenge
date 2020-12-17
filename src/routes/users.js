@@ -1,10 +1,8 @@
-const { Router } = require("express");
-const router = Router();
 const User = require('../models/User');
 const TrainingTimes = require('../models/TrainingTimes');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const verify = require('./verifyToken');
+//const verify = require('./verifyToken');
 const logger = require('../logs/logger');
 
 // Routes
@@ -20,7 +18,7 @@ const logger = require('../logs/logger');
  *        500:
  *          description: Backend error   
  */
-router.get('/', async (req, res) => {
+module.exports.getUsers = async function (apiVersion, req, res) {
     const users = await User.find(err => {
         if (err) {
             res.status(500).send('Backend error');
@@ -30,8 +28,7 @@ router.get('/', async (req, res) => {
     });
     res.status(200).json(users);
     logger.info('Responded with all users data')
-
-});
+}
 
 // GET ONE USER
 /**
@@ -52,8 +49,8 @@ router.get('/', async (req, res) => {
  *         400: 
  *           description: Bad request, id not valid
  */
-router.get('/:userID', async (req, res) => {
 
+module.exports.getUserById = async function (apiVersion, req, res) {
     try {
         const user = await User.findById(req.params.userID);
         res.status(200).json(user);
@@ -69,12 +66,7 @@ router.get('/:userID', async (req, res) => {
             console.log(e)
         }
     }
-
-
-
-
-})
-
+}
 
 // CREATES A USER
 /**
@@ -102,7 +94,8 @@ router.get('/:userID', async (req, res) => {
  *         400: 
  *           description: Bad request, missing required data
  */
-router.post('/', async (req, res) => {
+
+module.exports.createUsers = async function (apiVersion, req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(req.body.password, salt)
     const user = new User({
@@ -124,8 +117,7 @@ router.post('/', async (req, res) => {
     });
 
 
-
-})
+}
 
 // LOGS IN A USER
 /**
@@ -153,7 +145,8 @@ router.post('/', async (req, res) => {
  *         401: 
  *           description: Access denied
  */
-router.post('/login', async (req, res) => {
+
+module.exports.loginUser = async function (apiVersion, req, res) {
 
     if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
         logger.error('Bad request, body cannot be empty')
@@ -180,13 +173,12 @@ router.post('/login', async (req, res) => {
         return res.status(401).send('Password does not match');
         logger.error('Password does not match')
     }
-
     // JWT token 
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
     res.header('auth-token', token).json({ message: 'logged in, token delivered' });
     logger.info('User ' + user._id + ' has logged in')
+}
 
-})
 
 // WILL UPDATE USERS TRANING TIMES
 /**
@@ -217,7 +209,8 @@ router.post('/login', async (req, res) => {
  *           description: Bad request, missing required data
  *         
  */
-router.post('/update', async (req, res) => {
+
+module.exports.updateUser = async function (apiVersion, req, res) {
 
     const trainingtimes = new TrainingTimes({
         user: req.body.user_id,
@@ -232,7 +225,4 @@ router.post('/update', async (req, res) => {
     } catch (err) {
         res.status(400).json(err.errors)
     }
-})
-
-// EXPORT SO WE USE THEM FROM SOMEWHERE ELSE.
-module.exports = router;
+}

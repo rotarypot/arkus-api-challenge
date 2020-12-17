@@ -15,7 +15,8 @@ const logger = require('../logs/logger')
  *        500:
  *          description: Backend Error
  */
-router.get('/', async (req, res) => {
+
+module.exports.publicData = async function (apiVersion, req, res) {
 
     const users = await User.find(err => {
         if (err) { res.status(500).send('Backend error') }
@@ -25,7 +26,4 @@ router.get('/', async (req, res) => {
         .populate({ path: 'TrainingTimes', populate: { path: 'training_type', select: 'trainingTypeName' } })
     res.status(200).json(users);
     logger.info('delivered public data')
-})
-module.exports = router;
-
-
+}

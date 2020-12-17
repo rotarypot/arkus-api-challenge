@@ -1,6 +1,7 @@
 //SETUP SERVER
 const express = require("express");
 const cors = require('cors');
+const totoro = require('totoro-node');
 const app = express();
 app.set('port', process.env.PORT);
 app.use(express.json());
@@ -34,17 +35,70 @@ const options = { useNewUrlParser: true, useUnifiedTopology: true };
 mongoose.connect(process.env.DB_CONNECTION, options).catch(error => console.log(error))
 
 //SETUP ROUTES
-const appRoutes = require('./routes/routes');
 const usersRoutes = require('./routes/users');
 const coursesRoutes = require('./routes/courses');
 const trainingRoutes = require('./routes/trainingTypes');
 const publicDataRoutes = require('./routes/publicData');
 
-app.use('/', appRoutes);
-app.use('/users', usersRoutes);
-app.use('/courses', coursesRoutes);
-app.use('/trainingtypes', trainingRoutes);
-app.use('/publicdata', publicDataRoutes);
+app.use('/api', totoro.rain({
+
+    v1: {
+        endpoints: [
+            {
+                route: "/users",
+                method: "GET",
+                implementation: usersRoutes.getUsers
+            },
+            {
+                route: "/users/:userID",
+                method: "GET",
+                implementation: usersRoutes.getUserById
+            },
+            {
+                route: "/users/update",
+                method: "POST",
+                implementation: usersRoutes.updateUser
+            },
+            {
+                route: "/users/login",
+                method: "POST",
+                implementation: usersRoutes.loginUser
+            },
+            {
+                route: "/users",
+                method: "POST",
+                implementation: usersRoutes.createUsers
+            },
+            {
+                route: "/courses",
+                method: "GET",
+                implementation: coursesRoutes.courses
+            },
+            {
+                route: "/courses",
+                method: "POST",
+                implementation: coursesRoutes.createCourse
+            },
+            {
+                route: "/trainingtypes",
+                method: "GET",
+                implementation: trainingRoutes.trainingtypes
+            },
+            {
+                route: "/trainingtypes",
+                method: "POST",
+                implementation: trainingRoutes.createTraining
+            },
+            {
+                route: "/publicdata",
+                method: "GET",
+                implementation: publicDataRoutes.publicData
+            }
+        ]
+    }
+
+}))
+
 
 // LAUNCH SERVER
 app.listen(process.env.PORT, () => { logger.info('Server up..') })

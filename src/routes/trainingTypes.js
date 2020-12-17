@@ -1,5 +1,3 @@
-const { Router } = require("express");
-const router = Router();
 const TrainingTypes = require('../models/TrainingTypes');
 const logger = require('../logs/logger');
 
@@ -13,7 +11,8 @@ const logger = require('../logs/logger');
  *        200:
  *          description: Data was retrieved successfully
  */
-router.get('/', async (req, res) => {
+
+module.exports.trainingtypes = async function (apiVersion, req, res) {
     try {
         const trainingtypes = await TrainingTypes.find();
         res.json(trainingtypes);
@@ -24,7 +23,7 @@ router.get('/', async (req, res) => {
         logger.error('Error while getting all training types data')
 
     }
-});
+}
 
 /**
  * @swagger
@@ -47,7 +46,8 @@ router.get('/', async (req, res) => {
  *         400: 
  *           description: Bad request, missing required data
  */
-router.post('/', async (req, res) => {
+
+module.exports.createTraining = async function (apiVersion, req, res) {
     const trainingtype = new TrainingTypes({
         trainingTypeName: req.body.trainingtypename
     })
@@ -62,7 +62,4 @@ router.post('/', async (req, res) => {
             logger.info('New training type was created')
         }
     });
-})
-
-// EXPORT SO WE USE THEM FROM SOMEWHERE ELSE.
-module.exports = router;
+}

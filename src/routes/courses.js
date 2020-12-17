@@ -1,5 +1,3 @@
-const { Router, response } = require("express");
-const router = Router();
 const Course = require('../models/Course');
 const logger = require('../logs/logger')
 
@@ -13,12 +11,13 @@ const logger = require('../logs/logger')
  *        200:
  *          description: Data was retrieved successfully
  */
-router.get('/', async (req, res) => {
+
+module.exports.courses = async function (apiVersion, req, res) {
     const courses = await Course.find();
     res.json(courses)
     logger.info('Responded with all courses data')
-})
 
+}
 
 // Routes
 
@@ -47,7 +46,7 @@ router.get('/', async (req, res) => {
  *           description: Bad request, missing required data
  */
 
-router.post('/', async (req, res) => {
+module.exports.createCourse = async function (apiVersion, req, res) {
     const course = new Course({
         courseName: req.body.coursename,
         courseLink: req.body.courselink,
@@ -60,9 +59,4 @@ router.post('/', async (req, res) => {
             logger.info('New course was created')
         }
     })
-
-
-})
-
-// EXPORT SO WE USE THEM FROM SOMEWHERE ELSE.
-module.exports = router;
+}
