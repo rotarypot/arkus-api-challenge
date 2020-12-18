@@ -2,7 +2,6 @@ const User = require('../models/User');
 const TrainingTimes = require('../models/TrainingTimes');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-//const verify = require('./verifyToken');
 const logger = require('../logs/logger');
 
 // Routes
@@ -52,9 +51,12 @@ module.exports.getUsers = async function (apiVersion, req, res) {
 
 module.exports.getUserById = async function (apiVersion, req, res) {
     try {
-        const user = await User.findById(req.params.userID);
+        const user = await User.findById(req.params.userID)
+            .populate('TrainingTimes')
+            .populate({ path: 'TrainingTimes', populate: { path: 'course', select: 'courseName' } })
+            .populate({ path: 'TrainingTimes', populate: { path: 'training_type', select: 'trainingTypeName' } })
         res.status(200).json(user);
-        logger.info('Responded with user id : ' + req.params.userID + ' data')
+        logger.info('Responded with user id : ' + req.params.userID + ' public data')
     }
     catch (e) {
         if (e instanceof Error) {
@@ -224,5 +226,20 @@ module.exports.updateUser = async function (apiVersion, req, res) {
         res.status(200).json({ times: savedTimes._id })
     } catch (err) {
         res.status(400).json(err.errors)
+    }
+}
+
+
+module.exports.deleteTraining = async function (apiVersion, req, res) {
+
+    const timeToDelete = new TrainingTimes()
+    try {
+        const timeToDelete = await TrainingTimes.findOneAndDelete({ _id: req.params.id });
+        logger.info("Deleted training with id : " + timeToDelete._id);
+        res.status(200).json({ "Deleted": timeToDelete._id });
+    }
+    catch (err) {
+        res.status(400);
+        logger.error('backend error ' + err)
     }
 }

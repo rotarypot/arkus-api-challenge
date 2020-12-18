@@ -70,6 +70,11 @@ app.use('/api', totoro.rain({
                 implementation: usersRoutes.createUsers
             },
             {
+                route: "/users/training/:id",
+                method: "DELETE",
+                implementation: usersRoutes.deleteTraining
+            },
+            {
                 route: "/courses",
                 method: "GET",
                 implementation: coursesRoutes.courses
