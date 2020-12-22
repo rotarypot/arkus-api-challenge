@@ -1,0 +1,281 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Arkus Challenge API",
+    "description": "API for the Arkus Challenge",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1/",
+      "description": "version 1"
+    }
+  ],
+  "paths": {
+    "/courses": {
+      "get": {
+        "description": "Gets all courses data",
+        "summary": "Gets all courses data",
+        "responses": {
+          "200": {
+            "description": "Data was retrieved successfully"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new training course",
+        "summary": "Creates a new training course",
+        "responses": {
+          "201": {
+            "description": "Creates a new course with the information provided in the payload"
+          },
+          "400": {
+            "description": "Bad request, missing required data"
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Requires an object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coursename": {
+                  "type": "string"
+                },
+                "courselink": {
+                  "type": "string"
+                },
+                "coursedescription": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/publicdata": {
+      "get": {
+        "description": "Gets all public data",
+        "summary": "Gets all public data",
+        "responses": {
+          "200": {
+            "description": "Data was retrieved successfully"
+          }
+        }
+      }
+    },
+    "/trainingtypes": {
+      "get": {
+        "description": "Gets training types data",
+        "summary": "Gets all training types",
+        "responses": {
+          "200": {
+            "description": "Data was retrieved successfully"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new training type",
+        "summary": "Creates a new training type",
+        "responses": {
+          "201": {
+            "description": "Creates a new training type with the information provided in the payload"
+          },
+          "400": {
+            "description": "Bad request, missing required data"
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Requires an object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coursename": {
+                  "type": "string"
+                },
+                "courselink": {
+                  "type": "string"
+                },
+                "coursedescription": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "description": "Gets all users data",
+        "summary": "Gets all users data",
+        "responses": {
+          "200": {
+            "description": "Data was retrieved successfully"
+          },
+          "500": {
+            "description": "Backend error"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new user",
+        "summary": "Creates a new user",
+        "responses": {
+          "201": {
+            "description": "User was created successfully"
+          },
+          "400": {
+            "description": "Bad request, missing required data"
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Requires an object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/users/{userID}": {
+      "get": {
+        "description": "Gets a user by id",
+        "summary": "Gets the user's data by id",
+        "responses": {
+          "200": {
+            "description": "Data was retrieved successfully"
+          },
+          "400": {
+            "description": "Backend error"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userID",
+            "description": "Requires an id",
+            "parameters": {
+              "in": "path",
+              "name": "path",
+              "required": true,
+              "description": "Requires an id parameter to find the user"
+            }
+          }
+        ]
+      }
+    },
+    "/users/login": {
+      "post": {
+        "description": "Authenticates a user",
+        "summary": "Authenticates a user",
+        "responses": {
+          "200": {
+            "description": "User is authenticated"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Requires an object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/users/update": {
+      "post": {
+        "description": "Updates a user training times",
+        "summary": "Updates a user's training",
+        "responses": {
+          "200": {
+            "description": "User's training time is updated"
+          },
+          "400": {
+            "description": "Bad request, missing required data"
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Requires an object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "string"
+                },
+                "course": {
+                  "type": "string"
+                },
+                "training_type": {
+                  "type": "string"
+                },
+                "timespent": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/users/training/{id}": {
+      "delete": {
+        "description": "Deletes a training time from user",
+        "summary": "Deletes a training from user",
+        "responses": {
+          "200": {
+            "description": "Training time is deleted"
+          },
+          "400": {
+            "description": "Bad request, missing required data"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "path",
+            "description": "Requires an id",
+            "required": true
+          }
+        ]
+      }
+    }
+  }
+}

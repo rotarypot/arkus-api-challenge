@@ -8,31 +8,33 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ exposedHeaders: 'auth-token' }));
 require('dotenv/config');
-const swaggerDocs = require('swagger-jsdoc');
-const swaggerExpress = require('swagger-ui-express');
+
 const logger = require('./logs/logger')
 
-const swaggerOptions = {
-    swaggerDefinition: {
-        info: {
-            title: 'Arkus Challenge API',
-            description: 'Documentation for the Arkus Challenge API',
-            contact: {
-                name: 'Ulises Legarreta',
-                email: 'legarul@arkusnexus.com'
-            }
-        }
-    },
-    apis: ['./src/routes/*.js']
-}
+const swaggerExpress = require('swagger-ui-express');
 
-const swaggerDocumentation = swaggerDocs(swaggerOptions);
-app.use('/api-docs', swaggerExpress.serve, swaggerExpress.setup(swaggerDocumentation));
+const options = {
+    explorer: true,
+    swaggerOptions: {
+        urls: [
+            {
+                url: 'http://localhost:3000/swagger.json',
+                name: 'Arkus API Version 1'
+            },
+            {
+                url: 'http://localhost:3000/swaggerv2.json',
+                name: 'Arkus API Version 2'
+            }
+        ]
+    }
+}
+app.use(express.static('src/public'));
+app.use('/api-docs', swaggerExpress.serve, swaggerExpress.setup(null, options));
 
 //CONNECT TO db
 const mongoose = require("mongoose");
-const options = { useNewUrlParser: true, useUnifiedTopology: true };
-mongoose.connect(process.env.DB_CONNECTION, options).catch(error => console.log(error))
+const mongooseOptions = { useNewUrlParser: true, useUnifiedTopology: true };
+mongoose.connect(process.env.DB_CONNECTION, mongooseOptions).catch(error => console.log(error))
 
 //SETUP ROUTES
 const usersRoutes = require('./routes/users');
