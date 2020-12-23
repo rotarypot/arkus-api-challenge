@@ -18,11 +18,11 @@ const options = {
     swaggerOptions: {
         urls: [
             {
-                url: 'http://localhost:3000/swagger.json',
+                url: 'http://localhost:4000/swagger.json',
                 name: 'Arkus API Version 1'
             },
             {
-                url: 'http://localhost:3000/swaggerv2.json',
+                url: 'http://localhost:4000/swaggerv2.json',
                 name: 'Arkus API Version 2'
             }
         ]
@@ -34,7 +34,16 @@ app.use('/api-docs', swaggerExpress.serve, swaggerExpress.setup(null, options));
 //CONNECT TO db
 const mongoose = require("mongoose");
 const mongooseOptions = { useNewUrlParser: true, useUnifiedTopology: true };
-mongoose.connect(process.env.DB_CONNECTION, mongooseOptions).catch(error => console.log(error))
+mongoose.connect(process.env.DB_CONNECTION, mongooseOptions)
+    .then(db => {
+        logger.info('DB connected ');
+        return;
+    },
+        rej => {
+            logger.error('DB failed to connect');
+            return;
+        })
+    .catch(error => console.log(error))
 
 //SETUP ROUTES
 const usersRoutes = require('./routes/users');
@@ -105,7 +114,5 @@ app.use('/api', totoro.rain({
     }
 
 }))
-
-
 // LAUNCH SERVER
-app.listen(process.env.PORT, () => { logger.info('Server up..') })
+app.listen(process.env.PORT, () => { logger.info('Server is up...') })

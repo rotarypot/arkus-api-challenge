@@ -1,15 +1,28 @@
 version: "3"
-services: 
+services:
+  nodeapi: 
+    container_name: nodeapi
+    restart: always
+    build: .
+    ports: 
+      - "4000:3000"
+    links: 
+      - mongodb
+    volumes:
+      - .:/usr/src/app
   mongodb:
+    container_name: mongodatabase
     image: mongo
     ports: 
       - 27017:27017
+    logging:
+      driver: none
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - mongo-data:/data/db
-  mongo-express:
+  mongoexpress:
     image: mongo-express
     ports: 
       - 8081:8081
