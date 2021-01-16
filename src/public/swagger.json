@@ -25,6 +25,27 @@
       "post": {
         "description": "Creates a new training course",
         "summary": "Creates a new training course",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "coursename": {
+                    "type": "string"
+                  },
+                  "courselink": {
+                    "type": "string"
+                  },
+                  "coursedescription": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Creates a new course with the information provided in the payload"
@@ -32,28 +53,7 @@
           "400": {
             "description": "Bad request, missing required data"
           }
-        },
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Requires an object",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "coursename": {
-                  "type": "string"
-                },
-                "courselink": {
-                  "type": "string"
-                },
-                "coursedescription": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ]
+        }
       }
     },
     "/publicdata": {
@@ -80,6 +80,21 @@
       "post": {
         "description": "Creates a new training type",
         "summary": "Creates a new training type",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "trainingtypename": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Creates a new training type with the information provided in the payload"
@@ -87,28 +102,7 @@
           "400": {
             "description": "Bad request, missing required data"
           }
-        },
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Requires an object",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "coursename": {
-                  "type": "string"
-                },
-                "courselink": {
-                  "type": "string"
-                },
-                "coursedescription": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ]
+        }
       }
     },
     "/users": {
@@ -127,6 +121,27 @@
       "post": {
         "description": "Creates a new user",
         "summary": "Creates a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "User was created successfully"
@@ -134,28 +149,7 @@
           "400": {
             "description": "Bad request, missing required data"
           }
-        },
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Requires an object",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "type": "string"
-                },
-                "email": {
-                  "type": "string"
-                },
-                "password": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ]
+        }
       }
     },
     "/users/{userID}": {
@@ -189,6 +183,24 @@
       "post": {
         "description": "Authenticates a user",
         "summary": "Authenticates a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "User is authenticated"
@@ -196,31 +208,37 @@
           "400": {
             "description": "Bad request"
           }
-        },
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Requires an object",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string"
-                },
-                "password": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ]
+        }
       }
     },
     "/users/update": {
       "post": {
         "description": "Updates a user training times",
         "summary": "Updates a user's training",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "course_id": {
+                    "type": "string"
+                  },
+                  "training_type": {
+                    "type": "string"
+                  },
+                  "timespent": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "User's training time is updated"
@@ -228,31 +246,7 @@
           "400": {
             "description": "Bad request, missing required data"
           }
-        },
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Requires an object",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "user": {
-                  "type": "string"
-                },
-                "course": {
-                  "type": "string"
-                },
-                "training_type": {
-                  "type": "string"
-                },
-                "timespent": {
-                  "type": "number"
-                }
-              }
-            }
-          }
-        ]
+        }
       }
     },
     "/users/training/{id}": {
